@@ -1,3 +1,5 @@
+require.paths.unshift "./node_modules"
+
 #libraries
 jsdom 	= require "jsdom" 		#CommonJS DOM
 fs 		= require "fs"  		#read local files
