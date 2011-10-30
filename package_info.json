@@ -1,0 +1,11 @@
+{
+	"name":"Metals",
+	"version":"0.1",
+	"dependencies": {
+		"redis":"",
+		"express":"",
+		"./parser":"",
+		"jsdom":"",
+		"fs":""
+	}
+}
