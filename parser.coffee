@@ -1,8 +1,9 @@
+fs = require "fs"  		#read local files
+
 require.paths.unshift "./node_modules"
 
 #libraries
 jsdom 	= require "jsdom" 		#CommonJS DOM
-fs 		= require "fs"  		#read local files
 jquery 	= fs.readFileSync("./jquery-1.6.4.min.js").toString()
 
 #defines
