@@ -16,7 +16,7 @@ node.js server that does the following:
 require.paths.unshift "./node_modules"
 
 #libraries we depend on
-redis 	= require "redis" 		#redis datastore
+#redis 	= require "redis" 		#redis datastore
 express = require "express" 	#express http server
 parsing = require "./parser" 	#kitco.com html parser
 
