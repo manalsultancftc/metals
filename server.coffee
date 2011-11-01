@@ -51,7 +51,7 @@ class Metals
 
 	setRoutes: ->
 		@app.get "/", (req, res) ->
-			res.send "welcome to golddigger #{VERSION}"
+			res.send "welcome to #{APP_NAME} #{VERSION}"
 
 		@app.get "/gold/latest", (req, res) =>
 			res.send @parser.goldPrice()

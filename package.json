@@ -17,5 +17,8 @@
     "jsdom": "~0.2.9",
     "coffee-script": "~1.1.2"
   },
+  "scripts": {
+  	"start": "coffee server.coffee"
+  },
   "devDependencies": {}
 }
