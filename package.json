@@ -14,7 +14,8 @@
     "express": "~2.5.0",
     "redis": "~0.6.7",
     "hiredis": "~0.1.12",
-    "jsdom": "~0.2.9"
+    "jsdom": "~0.2.9",
+    "coffee-script": "~1.1.2"
   },
   "devDependencies": {}
 }

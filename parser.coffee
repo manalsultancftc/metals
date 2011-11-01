@@ -1,8 +1,17 @@
-fs = require "fs"  		#read local files
+###
 
-require.paths.unshift "./node_modules"
+metals
 
-#libraries
+@author Giovanni Martina
+@date 1-11-2011
+Copyright 2011
+
+kitco.com/market parser
+
+###
+
+#libraries we depend on
+fs 		= require "fs"  		#read local files
 jsdom 	= require "jsdom" 		#CommonJS DOM
 jquery 	= fs.readFileSync("./jquery-1.6.4.min.js").toString()
 

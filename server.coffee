@@ -1,6 +1,6 @@
 ###
 
-golddigger
+metals
 
 @author Giovanni Martina
 @date 20-10-2011
@@ -13,40 +13,29 @@ node.js server that does the following:
 
 ###
 
-
-
 #libraries we depend on
-#redis 	= require "redis" 		#redis datastore
-#express = require "express" 	#express http server
-#parsing = require "./parser" 	#kitco.com html parser
+redis 	= require "redis" 		#redis datastore
+express = require "express" 	#express http server
+parsing = require "./parser" 	#kitco.com html parser
 
 #defines
-VERSION 			= "0.1"
+APP_NAME 			= "metals"
+VERSION 			= "0.0.1"
 POLL_WAIT 			= 15*60*1000
 
-class Golddigger
+class Metals
 	constructor: ->
-		require.paths.unshift "./node_modules"
-		console.log require.paths
+		@port = process.env.PORT ? 8001
 
-		@host = process.env.VCAP_APP_HOST ? "localhost"
-		@port = process.env.VCAP_APP_PORT ? 8001
+		console.log "Welcome to #{APP_NAME} #{VERSION}"
+		console.log "Listening on port #{@port}"
 
-		console.log "Welcome to golddigger #{VERSION}"
-		console.log "Running @ #{@host}:#{@port}"
-
-		#@setup()
-		
-		express = require "express"
-		server = express.createServer()
-		server.listen @port
-		server.get "/", (req, res) ->
-			res.send "hey there"
+		@setup()
 
 	setup: ->
 		#create parser and perform initial parse
-		#@parser = parsing.getParserInstance()
-		#@parser.parse()
+		@parser = parsing.getParserInstance()
+		@parser.parse()
 
 		#start polling kitco.com for precious metal market data
 		setInterval =>
@@ -54,7 +43,7 @@ class Golddigger
 		, POLL_WAIT
 		
 		#create express server
-		@app = require("express").createServer()
+		@app = express.createServer()
 		@app.listen @port
 
 		#set express routes
@@ -71,6 +60,6 @@ class Golddigger
 			res.send @parser.silverPrice()
 
 	poll: ->
-		#@parser.parse()
+		@parser.parse()
 
-new Golddigger()
+new Metals()
