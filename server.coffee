@@ -21,7 +21,7 @@ parsing = require "./parser" 	#kitco.com html parser
 #defines
 APP_NAME 			= "metals"
 VERSION 			= "0.0.1"
-POLL_WAIT 			= 15*60*1000
+POLL_WAIT 			= 5*60*1000
 
 class Metals
 	constructor: ->
