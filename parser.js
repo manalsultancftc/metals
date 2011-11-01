@@ -1,9 +1,9 @@
 (function() {
   var KITCO_URL, Parser, fs, jquery, jsdom;
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+  fs = require("fs");
   require.paths.unshift("./node_modules");
   jsdom = require("jsdom");
-  fs = require("fs");
   jquery = fs.readFileSync("./jquery-1.6.4.min.js").toString();
   KITCO_URL = "http://www.kitco.com/market";
   Parser = (function() {
