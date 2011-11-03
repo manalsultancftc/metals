@@ -21,13 +21,22 @@ TROY_OZ_PER_KILO 	= 32.1507466
 
 class Parser
 	constructor: ->
-		@gold =
-			bid: 0
-			ask: 0
+		@metals =
+			gold:
+				bid: 0
+				ask: 0
 
-		@silver =
-			bid: 0
-			ask: 0
+			silver:
+				bid: 0
+				ask: 0
+
+			platinum:
+				bid: 0
+				ask: 0
+
+			palladium:
+				bid: 0
+				ask: 0
 	
 	parse: ->
 		console.log "Requesting #{KITCO_URL}"
@@ -56,32 +65,46 @@ class Parser
 				tr = tbody.find("tr:nth-child(4)")
 				tdBid = tr.find("td:nth-child(5)")
 				tdAsk = tr.find("td:nth-child(6)")
-				@gold.bid = Number tdBid.text()
-				@gold.ask = Number tdAsk.text()
+				@metals.gold.bid = Number tdBid.text()
+				@metals.gold.ask = Number tdAsk.text()
+				@metals.gold.bidPerKg = TROY_OZ_PER_KILO * @metals.gold.bid
+				@metals.gold.askPerKg = TROY_OZ_PER_KILO * @metals.gold.ask
 
 				#get silver price
 				tr = tbody.find("tr:nth-child(5)")
 				tdBid = tr.find("td:nth-child(5)")
 				tdAsk = tr.find("td:nth-child(6)")
-				@silver.bid = Number tdBid.text()
-				@silver.ask = Number tdAsk.text()
+				@metals.silver.bid = Number tdBid.text()
+				@metals.silver.ask = Number tdAsk.text()
+				@metals.silver.bidPerKg = TROY_OZ_PER_KILO * @metals.silver.bid
+				@metals.silver.askPerKg = TROY_OZ_PER_KILO * @metals.silver.ask
 
-				console.log @gold
-				console.log @silver
+				#get platinum price
+				tr = tbody.find("tr:nth-child(6)")
+				tdBid = tr.find("td:nth-child(5)")
+				tdAsk = tr.find("td:nth-child(6)")
+				@metals.platinum.bid = Number tdBid.text()
+				@metals.platinum.ask = Number tdAsk.text()
+				@metals.platinum.bidPerKg = TROY_OZ_PER_KILO * @metals.platinum.bid
+				@metals.platinum.askPerKg = TROY_OZ_PER_KILO * @metals.platinum.ask
+
+				#get palladium price
+				tr = tbody.find("tr:nth-child(7)")
+				tdBid = tr.find("td:nth-child(5)")
+				tdAsk = tr.find("td:nth-child(6)")
+				@metals.palladium.bid = Number tdBid.text()
+				@metals.palladium.ask = Number tdAsk.text()
+				@metals.palladium.bidPerKg = TROY_OZ_PER_KILO * @metals.palladium.bid
+				@metals.palladium.askPerKg = TROY_OZ_PER_KILO * @metals.palladium.ask
+
+				console.log @metals
 				
 				no #stop each loop
 
-	goldPrice: ->
-		#post: returns latest gold prices parsed from kitco.com/market
-		@gold.bidPerKg = TROY_OZ_PER_KILO * @gold.bid
-		@gold.askPerKg = TROY_OZ_PER_KILO * @gold.ask
-		@gold
-
-	silverPrice: ->
-		#post: returns latest silver prices parsed from kitco.com/market
-		@silver.bidPerKg = TROY_OZ_PER_KILO * @silver.bid
-		@silver.askPerKg = TROY_OZ_PER_KILO * @silver.ask
-		@silver
+	prices: ->
+		#post: returns latest precious metals prices 
+		# 		parsed from kitco.com/market
+		@metals
 
 exports.getParserInstance = ->
 	new Parser()

@@ -9,7 +9,8 @@ Copyright 2011
 node.js server that does the following:
 - 	periodically GETs http://www.kitco.com/market/ to get the current World Gold Spot Price
  	and save the latest Spot Price to a redis instance
-- 	has an API so callers can request the latest Gold Spot Price
+- 	has an API so callers can request the latest gold and
+	other precious metals spot prices
 
 ###
 
@@ -53,11 +54,8 @@ class Metals
 		@app.get "/", (req, res) ->
 			res.send "welcome to #{APP_NAME} #{VERSION}"
 
-		@app.get "/gold/latest", (req, res) =>
-			res.send @parser.goldPrice()
-
-		@app.get "/silver/latest", (req, res) =>
-			res.send @parser.silverPrice()
+		@app.get "/metals/latest", (req, res) =>
+			res.send @parser.prices()
 
 	poll: ->
 		@parser.parse()
