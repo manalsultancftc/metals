@@ -11,10 +11,10 @@
     "node": "~0.4.11"
   },
   "dependencies": {
-    "express": "~2.5.0",
+    "express": "~2.5.1",
     "redis": "~0.6.7",
-    "hiredis": "~0.1.12",
-    "jsdom": "~0.2.9",
+    "hiredis": "~0.1.13",
+    "jsdom": "~0.2.10",
     "coffee-script": "~1.1.3"
   },
   "scripts": {
