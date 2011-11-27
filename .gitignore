@@ -1,5 +1,4 @@
 #ignore files
 node_modules
 *.swp
-*.js
 .DS_Store
