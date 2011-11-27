@@ -13,35 +13,37 @@ kitco.com/market parser
 #libraries we depend on
 fs 		= require "fs"  		#read local files
 jsdom 	= require "jsdom" 		#CommonJS DOM
-jquery 	= fs.readFileSync("./jquery-1.6.4.min.js").toString()
+jquery 	= fs.readFileSync("./jquery-1.7.min.js").toString()
 
 #defines
 KITCO_URL 			= "http://www.kitco.com/market"
+BULLIONVAULT_URL 	= "http://www.bullionvault.com"
+CASEY_URL 			= "http://www.caseyresearch.com"
 TROY_OZ_PER_KILO 	= 32.1507466
 
 class Parser
 	constructor: ->
 		@metals =
 			gold:
-				bid: 0
-				ask: 0
+				quote: 0
+				quoteKg: 0
 
 			silver:
-				bid: 0
-				ask: 0
+				quote: 0
+				quoteKg: 0
 
 			platinum:
-				bid: 0
-				ask: 0
+				quote: 0
+				quoteKg: 0
 
 			palladium:
-				bid: 0
-				ask: 0
+				quote: 0
+				quoteKg: 0
 	
 	parse: ->
-		console.log "Requesting #{KITCO_URL}"
+		console.log "Requesting #{CASEY_URL}"
 		jsdom.env
-			html: KITCO_URL
+			html: CASEY_URL
 			src: [
 				jquery
 			]
@@ -51,55 +53,39 @@ class Parser
 				else
 					@findSpotPrice window
 
+	normalizePrice: (price) ->
+		#pre: price is a dollar price e.g $1,680.20
+		#post: returns normalized price as number
+		price = price[1..price.length] 	#remove currency symbol $
+		price = price.replace ",", "" 	#remove commas
+		Number price
+
 	findSpotPrice: (window) ->
 		$ = window.$ #local jquery for page
 
-		#each p
-		$("p").each (index, elem) =>
-			if $(elem).text().toLowerCase().indexOf("the world spot price") isnt -1
-				#found correct paragraph for world spot prices
-				#get tbody
-				tbody = $(elem).parent().parent().parent()
+		#get precious metals price from casey frontpage
+		gold = $("td.casey-charts.column-0").first()
+		silver = $("td.casey-charts.column-1").first()
+		platinum = $("td.casey-charts.column-2").first()
+		palladium = $("td.casey-charts.column-3").first()
 
-				#get gold price
-				tr = tbody.find("tr:nth-child(4)")
-				tdBid = tr.find("td:nth-child(5)")
-				tdAsk = tr.find("td:nth-child(6)")
-				@metals.gold.bid = Number tdBid.text()
-				@metals.gold.ask = Number tdAsk.text()
-				@metals.gold.bidPerKg = TROY_OZ_PER_KILO * @metals.gold.bid
-				@metals.gold.askPerKg = TROY_OZ_PER_KILO * @metals.gold.ask
+		#convert to numbers
+		gold = @normalizePrice gold.html()
+		silver = @normalizePrice silver.html()
+		platinum = @normalizePrice platinum.html()
+		palladium = @normalizePrice palladium.html()
 
-				#get silver price
-				tr = tbody.find("tr:nth-child(5)")
-				tdBid = tr.find("td:nth-child(5)")
-				tdAsk = tr.find("td:nth-child(6)")
-				@metals.silver.bid = Number tdBid.text()
-				@metals.silver.ask = Number tdAsk.text()
-				@metals.silver.bidPerKg = TROY_OZ_PER_KILO * @metals.silver.bid
-				@metals.silver.askPerKg = TROY_OZ_PER_KILO * @metals.silver.ask
+		#set json
+		@metals.gold.quote = gold
+		@metals.gold.quoteKg = Math.round(gold * TROY_OZ_PER_KILO * 100) / 100
+		@metals.silver.quote = silver
+		@metals.silver.quoteKg = Math.round(silver * TROY_OZ_PER_KILO * 100) / 100
+		@metals.platinum.quote = platinum
+		@metals.platinum.quoteKg = Math.round(platinum * TROY_OZ_PER_KILO * 100) / 100
+		@metals.palladium.quote = palladium
+		@metals.palladium.quoteKg = Math.round(palladium * TROY_OZ_PER_KILO * 100) / 100
 
-				#get platinum price
-				tr = tbody.find("tr:nth-child(6)")
-				tdBid = tr.find("td:nth-child(5)")
-				tdAsk = tr.find("td:nth-child(6)")
-				@metals.platinum.bid = Number tdBid.text()
-				@metals.platinum.ask = Number tdAsk.text()
-				@metals.platinum.bidPerKg = TROY_OZ_PER_KILO * @metals.platinum.bid
-				@metals.platinum.askPerKg = TROY_OZ_PER_KILO * @metals.platinum.ask
-
-				#get palladium price
-				tr = tbody.find("tr:nth-child(7)")
-				tdBid = tr.find("td:nth-child(5)")
-				tdAsk = tr.find("td:nth-child(6)")
-				@metals.palladium.bid = Number tdBid.text()
-				@metals.palladium.ask = Number tdAsk.text()
-				@metals.palladium.bidPerKg = TROY_OZ_PER_KILO * @metals.palladium.bid
-				@metals.palladium.askPerKg = TROY_OZ_PER_KILO * @metals.palladium.ask
-
-				console.log @metals
-				
-				no #stop each loop
+		console.log @metals
 
 	prices: ->
 		#post: returns latest precious metals prices 
